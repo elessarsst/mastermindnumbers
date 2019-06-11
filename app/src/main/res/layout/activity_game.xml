@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity">
+
+    <GridLayout
+        android:id="@+id/computerNumberGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/computerNumberKey1"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/computerNumberKey2"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/computerNumberKey3"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/computerNumberKey4"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/userNumberGridLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/computerNumberGridLayout">
+
+        <ImageView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"
+            android:background="@drawable/gradient_to_top"/>
+        <Space
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.03"/>
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"/>
+        <ImageView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:background="#3E4E13"
+            android:layout_weight="0.03"/>
+        <Space
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"/>
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.1"/>
+            <include layout="@layout/guess_row_computer"/>
+        </LinearLayout>
+        <Space
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.03"/>
+        <ImageView
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"
+            android:background="@drawable/gradient_to_bottom"/>
+
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/userNumberGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/key1"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/key2"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/key3"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/key4"
+            android:layout_width="50sp"
+            android:layout_height="70sp"
+            android:layout_margin="10sp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="X"
+            android:textSize="40sp" />
+    </GridLayout>
+</android.support.constraint.ConstraintLayout>
