@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -21,25 +21,27 @@ public class MainActivity extends Activity {
     List<Integer> userNumber;
     List<Integer> computerNumber;
 
-    @BindViews({ R.id.key0, R.id.key1, R.id.key2, R.id.key3, R.id.key4, R.id.key5, R.id.key6, R.id.key7, R.id.key8, R.id.key9})
+    @BindViews({R.id.key0, R.id.key1, R.id.key2, R.id.key3, R.id.key4, R.id.key5, R.id.key6, R.id.key7, R.id.key8, R.id.key9})
     List<TextView> keys;
 
-    @BindView(R.id.userNumberIndicator) TextView userNumberIndicator;
+    @BindView(R.id.userNumberIndicator)
+    TextView userNumberIndicator;
 
-    @BindView(R.id.startKey) TextView startKey;
+    @BindView(R.id.startKey)
+    TextView startKey;
 
     @OnClick({R.id.key1, R.id.key2, R.id.key3, R.id.key4, R.id.key5, R.id.key6, R.id.key7, R.id.key8, R.id.key9, R.id.key0})
     public void addNumber(TextView key) {
-        if(userNumber.size() == 0) {
+        if (userNumber.size() == 0) {
             keys.get(0).setEnabled(true);
         }
-        if(userNumber.size() < 4) {
+        if (userNumber.size() < 4) {
             key.setEnabled(false);
             userNumber.add(Integer.valueOf(key.getText().toString()));
             setUserNumberText();
         }
 
-        if(userNumber.size() == 4) {
+        if (userNumber.size() == 4) {
             startKey.setEnabled(true);
         }
     }
@@ -51,12 +53,13 @@ public class MainActivity extends Activity {
         ButterKnife.bind(this);
         userNumber = new ArrayList<>();
         computerNumber = new ArrayList<>();
+
         resetArray(getCurrentFocus());
     }
 
     public void resetArray(View view) {
         // Disable Key "0" Enable Other Numbers
-        for(TextView key : keys) {
+        for (TextView key : keys) {
             key.setEnabled(!key.getText().toString().equals("0"));
         }
         // Empty The Array
@@ -66,34 +69,56 @@ public class MainActivity extends Activity {
     }
 
     public void backSpaceNumber(View view) {
-        if(userNumber.size() > 0) {
+        if (userNumber.size() > 0) {
             keys.get(userNumber.get(userNumber.size() - 1)).setEnabled(true);
             userNumber.remove(userNumber.size() - 1);
             setUserNumberText();
             startKey.setEnabled(false);
         }
-        if(userNumber.size() == 0)
+        if (userNumber.size() == 0)
             resetArray(getCurrentFocus());
     }
 
     public void startGame(View view) {
-        if(userNumber.size() == 4) {
+        if (userNumber.size() == 4) {
             //TODO Start The Game
             Log.d(TAG, "The game can be started...");
-            int[] myNumbers = {0, 0, 0, 0};
-            int[] computerNumbers = {0, 0, 0, 0};
-            for(int number : userNumber) myNumbers[userNumber.indexOf(number)] = number;
-            for(int number : computerNumber) computerNumbers[computerNumber.indexOf(number)] = number;
+            createComputerNumber();
+            int[] userDigits = {0, 0, 0, 0};
+            int[] computerDigits = {0, 0, 0, 0};
+            for (int number : userNumber) userDigits[userNumber.indexOf(number)] = number;
+            for (int number : computerNumber)
+                computerDigits[computerNumber.indexOf(number)] = number;
             Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra("myNumbers", myNumbers);
-            intent.putExtra("computerNumbers", computerNumbers);
+            intent.putExtra("userDigits", userDigits);
+            intent.putExtra("computerDigits", computerDigits);
             startActivity(intent);
+            finish();
         }
     }
 
-    private void setUserNumberText(){
+    private void setUserNumberText() {
         StringBuilder userNumberStringBuilder = new StringBuilder();
-        for(Integer digit : userNumber) userNumberStringBuilder.append(digit);
+        for (Integer digit : userNumber) userNumberStringBuilder.append(digit);
         userNumberIndicator.setText(userNumberStringBuilder.toString());
+    }
+
+    private void createComputerNumber() {
+        computerNumber.add(new Random().nextInt(9) + 1);
+        int i = 0;
+        while (i < 3) {
+            Integer randomDigit = new Random().nextInt(10);
+            boolean isDuplicated = false;
+            for(Integer computerDigit : computerNumber) {
+                if(computerDigit.equals(randomDigit)) {
+                    isDuplicated = true;
+                    break;
+                }
+            }
+            if(!isDuplicated) {
+                computerNumber.add(randomDigit);
+                i++;
+            }
+        }
     }
 }

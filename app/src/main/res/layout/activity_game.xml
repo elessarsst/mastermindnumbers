@@ -20,7 +20,7 @@
             android:id="@+id/computerNumberKey1"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
@@ -30,7 +30,7 @@
             android:id="@+id/computerNumberKey2"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
@@ -40,7 +40,7 @@
             android:id="@+id/computerNumberKey3"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
@@ -50,7 +50,7 @@
             android:id="@+id/computerNumberKey4"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
@@ -267,40 +267,40 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
-            android:id="@+id/key1"
+            android:id="@+id/userNumberKey1"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
             android:textSize="40sp" />
 
         <TextView
-            android:id="@+id/key2"
+            android:id="@+id/userNumberKey2"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
             android:textSize="40sp" />
 
         <TextView
-            android:id="@+id/key3"
+            android:id="@+id/userNumberKey3"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
             android:textSize="40sp" />
 
         <TextView
-            android:id="@+id/key4"
+            android:id="@+id/userNumberKey4"
             android:layout_width="50sp"
             android:layout_height="70sp"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:text="X"
