@@ -14,37 +14,29 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends Activity {
     private static final String TAG = "Main Activity Log";
     List<Integer> userNumber;
     List<Integer> computerNumber;
 
-    @BindViews({R.id.key0, R.id.key1, R.id.key2, R.id.key3, R.id.key4, R.id.key5, R.id.key6, R.id.key7, R.id.key8, R.id.key9})
-    List<TextView> keys;
+    @BindViews({R.id.numberKey0, R.id.numberKey1, R.id.numberKey2, R.id.numberKey3, R.id.numberKey4,
+            R.id.numberKey5, R.id.numberKey6, R.id.numberKey7, R.id.numberKey8, R.id.numberKey9})
+    List<TextView> numberKeys;
 
     @BindView(R.id.userNumberIndicator)
     TextView userNumberIndicator;
 
+    @BindView(R.id.clearKey)
+    TextView clearKey;
+
+    @BindView(R.id.backSpaceKey)
+    TextView backSpaceKey;
+
     @BindView(R.id.startKey)
     TextView startKey;
 
-    @OnClick({R.id.key1, R.id.key2, R.id.key3, R.id.key4, R.id.key5, R.id.key6, R.id.key7, R.id.key8, R.id.key9, R.id.key0})
-    public void addNumber(TextView key) {
-        if (userNumber.size() == 0) {
-            keys.get(0).setEnabled(true);
-        }
-        if (userNumber.size() < 4) {
-            key.setEnabled(false);
-            userNumber.add(Integer.valueOf(key.getText().toString()));
-            setUserNumberText();
-        }
-
-        if (userNumber.size() == 4) {
-            startKey.setEnabled(true);
-        }
-    }
+    Keypad keypad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +46,15 @@ public class MainActivity extends Activity {
         userNumber = new ArrayList<>();
         computerNumber = new ArrayList<>();
 
-        resetArray(getCurrentFocus());
+        keypad = new Keypad(userNumberIndicator, numberKeys, clearKey, backSpaceKey, startKey);
     }
 
-    public void resetArray(View view) {
-        // Disable Key "0" Enable Other Numbers
-        for (TextView key : keys) {
-            key.setEnabled(!key.getText().toString().equals("0"));
-        }
-        // Empty The Array
-        userNumber.clear();
-        userNumberIndicator.setText("");
-        startKey.setEnabled(false);
-    }
-
-    public void backSpaceNumber(View view) {
-        if (userNumber.size() > 0) {
-            keys.get(userNumber.get(userNumber.size() - 1)).setEnabled(true);
-            userNumber.remove(userNumber.size() - 1);
-            setUserNumberText();
+    public void submit(View view) {
+        userNumber = keypad.submit();
+        if (userNumber != null) {
             startKey.setEnabled(false);
-        }
-        if (userNumber.size() == 0)
-            resetArray(getCurrentFocus());
-    }
-
-    public void startGame(View view) {
-        if (userNumber.size() == 4) {
-            //TODO Start The Game
             Log.d(TAG, "The game can be started...");
-            createComputerNumber();
+            computerNumber = Keypad.createComputerNumber();
             int[] userDigits = {0, 0, 0, 0};
             int[] computerDigits = {0, 0, 0, 0};
             for (int number : userNumber) userDigits[userNumber.indexOf(number)] = number;
@@ -97,28 +68,5 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void setUserNumberText() {
-        StringBuilder userNumberStringBuilder = new StringBuilder();
-        for (Integer digit : userNumber) userNumberStringBuilder.append(digit);
-        userNumberIndicator.setText(userNumberStringBuilder.toString());
-    }
 
-    private void createComputerNumber() {
-        computerNumber.add(new Random().nextInt(9) + 1);
-        int i = 0;
-        while (i < 3) {
-            Integer randomDigit = new Random().nextInt(10);
-            boolean isDuplicated = false;
-            for(Integer computerDigit : computerNumber) {
-                if(computerDigit.equals(randomDigit)) {
-                    isDuplicated = true;
-                    break;
-                }
-            }
-            if(!isDuplicated) {
-                computerNumber.add(randomDigit);
-                i++;
-            }
-        }
-    }
 }

@@ -8,39 +8,44 @@
 
 
     <TextView
-        android:id="@+id/whiteHint"
+        android:id="@+id/guessRowComputerWhiteHint"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:autoSizeTextType="uniform"
         android:background="#ffffff"
-        android:textColor="@color/colorPrimaryDark"
         android:gravity="center"
         android:padding="3sp"
-        android:textStyle="bold"
-        android:text="-" />
+        android:text="-"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
     <Space
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="0.1" />
 
     <TextView
-        android:id="@+id/redHint"
+        android:id="@+id/guessRowComputerRedHint"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:autoSizeMaxTextSize="10sp"
+        android:autoSizeMinTextSize="5sp"
         android:autoSizeTextType="uniform"
         android:background="#ff0000"
         android:gravity="center"
         android:padding="3sp"
-        android:textStyle="bold"
-        android:text="-" />
+        android:text="-"
+        android:textStyle="bold" />
+
     <Space
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="0.1" />
+
     <TextView
-        android:id="@+id/key1"
+        android:id="@+id/guessRowComputerKey1"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -55,7 +60,7 @@
         android:layout_weight="0.1" />
 
     <TextView
-        android:id="@+id/key2"
+        android:id="@+id/guessRowComputerKey2"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
@@ -71,7 +76,7 @@
         android:layout_weight="0.1" />
 
     <TextView
-        android:id="@+id/key3"
+        android:id="@+id/guessRowComputerKey3"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -86,7 +91,7 @@
         android:layout_weight="0.1" />
 
     <TextView
-        android:id="@+id/key4"
+        android:id="@+id/guessRowComputerKey4"
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
