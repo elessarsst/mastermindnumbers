@@ -11,9 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -28,6 +34,16 @@ public class GameActivity extends Activity {
     List<Integer> userNumber;
     List<Integer> computerNumber;
     List<Integer> userGuessNumber;
+    List<Integer> numberExistanceProbabilities = new ArrayList<>();
+    List<List<Integer>> digitProbabilities = new ArrayList<>();
+//    List<Integer> firstDigitProbabilities = new ArrayList<>();
+//    List<Integer> secondDigitProbabilities = new ArrayList<>();
+//    List<Integer> thirdDigitProbabilities = new ArrayList<>();
+//    List<Integer> forthDigitProbabilities = new ArrayList<>();
+    List<Integer> computersThreePoint = new ArrayList<>();
+    List<List<Integer>> computerGuessHistory = new ArrayList<>();
+
+
     int roundNumber;
 
     @BindViews({R.id.numberKey0, R.id.numberKey1, R.id.numberKey2, R.id.numberKey3, R.id.numberKey4,
@@ -96,6 +112,19 @@ public class GameActivity extends Activity {
 //        }
         userGuessKeyPad.setVisibility(View.INVISIBLE);
         computerGuessKeyPad.setVisibility(View.INVISIBLE);
+
+        List<Integer> initialDigitProbabilities = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            numberExistanceProbabilities.add(100);
+            initialDigitProbabilities.add(100);
+        }
+
+        initialDigitProbabilities.set(0, 0);
+        digitProbabilities.add(initialDigitProbabilities);
+        initialDigitProbabilities.set(0, 100);
+        digitProbabilities.add(initialDigitProbabilities);
+        digitProbabilities.add(initialDigitProbabilities);
+        digitProbabilities.add(initialDigitProbabilities);
     }
 
     private void tester(int playertype, int guessCount) {
@@ -142,7 +171,7 @@ public class GameActivity extends Activity {
                     if (computerNumber.indexOf(guessedDigit) == guessArray.indexOf(guessedDigit))
                         whiteHintPoints++;
                     else
-                        redHintPoints--;
+                        redHintPoints++;
                 }
             }
         } else {
@@ -158,7 +187,7 @@ public class GameActivity extends Activity {
                     if (userNumber.indexOf(guessedDigit) == guessArray.indexOf(guessedDigit))
                         whiteHintPoints++;
                     else
-                        redHintPoints--;
+                        redHintPoints++;
                 }
             }
         }
@@ -168,7 +197,7 @@ public class GameActivity extends Activity {
         key3.setText(String.valueOf(guessArray.get(2)));
         key4.setText(String.valueOf(guessArray.get(3)));
         whiteHint.setText(String.valueOf(whiteHintPoints));
-        redHint.setText(String.valueOf(redHintPoints));
+        redHint.setText(String.valueOf(redHintPoints * -1));
 
         return new int[]{whiteHintPoints, redHintPoints};
     }
@@ -206,8 +235,10 @@ public class GameActivity extends Activity {
     private void showTheNumbers() {
         for (Integer userDigit : userNumber)
             userNumberDigits.get(userNumber.indexOf(userDigit)).setText(String.valueOf(userDigit));
+        /*
         for (Integer computerDigit : computerNumber)
             computerNumberDigits.get(computerNumber.indexOf(computerDigit)).setText(String.valueOf(computerDigit));
+            */
         Log.d(TAG, "computer : " + computerNumber.toString() + " user : " + userNumber.toString());
     }
 
@@ -236,7 +267,8 @@ public class GameActivity extends Activity {
             else {
                 new Handler().postDelayed(() -> {
                     computerGuessKeyPad.setVisibility(View.VISIBLE);
-                    List<Integer> computerGuessNumber = Keypad.createComputerNumber();
+                    //List<Integer> computerGuessNumber = Keypad.createComputerNumber();
+                    List<Integer> computerGuessNumber = computerGuess();
                     new Handler().postDelayed(() -> {
                         int[] computerResult = showGuessRow(PLAYER_COMPUTER, roundNumber, computerGuessNumber);
                         if (computerResult[0] == 4)
@@ -256,6 +288,10 @@ public class GameActivity extends Activity {
     }
 
     private void endGame(int whoWon) {
+
+        for (Integer computerDigit : computerNumber)
+            computerNumberDigits.get(computerNumber.indexOf(computerDigit)).setText(String.valueOf(computerDigit));
+
         switch (whoWon) {
             case PLAYER_USER:
                 endGameText.setText("YOU WON!");
@@ -275,5 +311,75 @@ public class GameActivity extends Activity {
         tryKey.setEnabled(false);
         endGameText.setVisibility(View.VISIBLE);
         endGameSubText.setVisibility(View.VISIBLE);
+    }
+
+    private int digitGuess(List<Integer> digitProbabilities, List<Integer> computerGuess) {
+        int generatedDigit = new Random().nextInt(10);
+        int maximumValueOfProbability = 0;
+        for (int value : digitProbabilities)
+            if (value > maximumValueOfProbability)
+                maximumValueOfProbability = value;
+
+        while (numberExistanceProbabilities.get(generatedDigit) <= 0 || digitProbabilities.get(generatedDigit) != maximumValueOfProbability || computerGuess.indexOf(generatedDigit) > -1)
+            if (computerGuess.size() == 0)
+                generatedDigit = new Random().nextInt(9) + 1;
+            else
+                generatedDigit = new Random().nextInt(10);
+
+        return generatedDigit;
+    }
+
+    private List<Integer> computerGuess() {
+
+        List<Integer> computerGuessNumber = new ArrayList<>();
+
+        while(computerGuessHistory.contains(computerGuessNumber) || computerGuessNumber.size() < 4) {
+            computerGuessNumber.clear();
+            if(!computersThreePoint.isEmpty()) {
+                int changeIndex = new Random().nextInt(4);
+                computerGuessNumber.addAll(computersThreePoint);
+                computerGuessNumber.set(changeIndex, digitGuess(digitProbabilities.get(changeIndex), computerGuessNumber));
+
+            } else
+                for(int i = 0; i<4; i++)
+                    computerGuessNumber.add(digitGuess(digitProbabilities.get(i), computerGuessNumber));
+            Log.d(TAG, "Generated Number :" + computerGuessNumber);
+        }
+
+        int whiteHintPoints = 0;
+        int redHintPoints = 0;
+        for (Integer guessedDigit : computerGuessNumber) {
+            if (userNumber.indexOf(guessedDigit) > -1) {
+                if (userNumber.indexOf(guessedDigit) == computerGuessNumber.indexOf(guessedDigit))
+                    whiteHintPoints++;
+                else
+                    redHintPoints++;
+            }
+        }
+
+        if(whiteHintPoints + redHintPoints == 4) {
+            for (int i = 0; i < 10; i++) {
+                if (computerGuessNumber.indexOf(i) < 0)
+                    numberExistanceProbabilities.set(i, 0);
+            }
+            if(redHintPoints == 4) {
+                for (int i = 0; i < 4; i++)
+                    digitProbabilities.get(i).set(digitProbabilities.get(i).get(computerGuessNumber.get(i)), 0);
+            }
+        } else if (whiteHintPoints + redHintPoints == 3 && computersThreePoint.isEmpty()) {
+            computersThreePoint.addAll(computerGuessNumber);
+        } else if (whiteHintPoints + redHintPoints == 0) {
+            for (int i = 0; i < 10; i++) {
+                if (computerGuessNumber.indexOf(i) >= 0)
+                    numberExistanceProbabilities.set(i, 0);
+            }
+        }
+
+
+
+
+        computerGuessHistory.add(computerGuessNumber);
+        Log.d(TAG, "Computer Guess Number: " +computerGuessNumber.toString());
+        return computerGuessNumber;
     }
 }
