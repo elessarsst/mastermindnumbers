@@ -272,7 +272,7 @@ public class GameActivity extends Activity {
                     new Handler().postDelayed(() -> {
                         int[] computerResult = showGuessRow(PLAYER_COMPUTER, roundNumber, computerGuessNumber);
                         if (computerResult[0] == 4)
-                            endGame(PLAYER_USER);
+                            endGame(PLAYER_COMPUTER);
                         else {
                             if (roundNumber < 14) {
                                 roundNumber++;
@@ -358,6 +358,7 @@ public class GameActivity extends Activity {
         }
 
         if(whiteHintPoints + redHintPoints == 4) {
+            computersThreePoint.clear();
             for (int i = 0; i < 10; i++) {
                 if (computerGuessNumber.indexOf(i) < 0)
                     numberExistanceProbabilities.set(i, 0);
