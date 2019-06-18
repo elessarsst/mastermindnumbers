@@ -1,4 +1,4 @@
-package com.serhatturkman.mestermindnumbers;
+package com.serhatturkman.mastermindnumbers;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,15 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -36,15 +30,15 @@ public class GameActivity extends Activity {
     List<Integer> userGuessNumber;
     List<Integer> numberExistanceProbabilities = new ArrayList<>();
     List<List<Integer>> digitProbabilities = new ArrayList<>();
-//    List<Integer> firstDigitProbabilities = new ArrayList<>();
-//    List<Integer> secondDigitProbabilities = new ArrayList<>();
-//    List<Integer> thirdDigitProbabilities = new ArrayList<>();
-//    List<Integer> forthDigitProbabilities = new ArrayList<>();
     List<Integer> computersThreePoint = new ArrayList<>();
     List<List<Integer>> computerGuessHistory = new ArrayList<>();
-
-
     int roundNumber;
+
+
+    /**
+     *  ButterKnife Assignments Start
+     *
+     */
 
     @BindViews({R.id.numberKey0, R.id.numberKey1, R.id.numberKey2, R.id.numberKey3, R.id.numberKey4,
             R.id.numberKey5, R.id.numberKey6, R.id.numberKey7, R.id.numberKey8, R.id.numberKey9})
@@ -91,8 +85,17 @@ public class GameActivity extends Activity {
     @BindView(R.id.endGameSubText)
     TextView endGameSubText;
 
+    /**
+     *  ButterKnife Assignments End
+     *
+     */
+
+
     Keypad keypad;
 
+    /**
+     * shows the keypad to make a guess
+     */
     @OnClick(R.id.tryKey)
     public void guessNumber() {
         userGuessKeyPad.setVisibility(View.VISIBLE);
@@ -106,48 +109,40 @@ public class GameActivity extends Activity {
         getTheNumbers();
         showTheNumbers();
         keypad = new Keypad(userNumberIndicator, numberKeys, clearKey, backSpaceKey, startKey);
-//        for(int i=0; i<15; i++) {
-//            tester(PLAYER_COMPUTER, i);
-//            tester(PLAYER_USER, i);
-//        }
         userGuessKeyPad.setVisibility(View.INVISIBLE);
         computerGuessKeyPad.setVisibility(View.INVISIBLE);
+        setProbabilities();
+    }
 
-        List<Integer> initialDigitProbabilities = new ArrayList<>();
+    /**
+     * Set of probabilities of digits
+     */
+    private void setProbabilities(){
+        List<Integer> firstDigitProbabilities = new ArrayList<>();
+        List<Integer> secondDigitProbabilities = new ArrayList<>();
+        List<Integer> thirdDigitProbabilities = new ArrayList<>();
+        List<Integer> forthDigitProbabilities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             numberExistanceProbabilities.add(100);
-            initialDigitProbabilities.add(100);
+            firstDigitProbabilities.add(100);
+            secondDigitProbabilities.add(100);
+            thirdDigitProbabilities.add(100);
+            forthDigitProbabilities.add(100);
         }
-
-        initialDigitProbabilities.set(0, 0);
-        digitProbabilities.add(initialDigitProbabilities);
-        initialDigitProbabilities.set(0, 100);
-        digitProbabilities.add(initialDigitProbabilities);
-        digitProbabilities.add(initialDigitProbabilities);
-        digitProbabilities.add(initialDigitProbabilities);
+        digitProbabilities.add(firstDigitProbabilities);
+        digitProbabilities.add(secondDigitProbabilities);
+        digitProbabilities.add(thirdDigitProbabilities);
+        digitProbabilities.add(forthDigitProbabilities);
+        digitProbabilities.get(0).set(0, 0);
     }
 
-    private void tester(int playertype, int guessCount) {
-        List<Integer> testNumber = new ArrayList<>();
-        testNumber.add(new Random().nextInt(9) + 1);
-        int i = 0;
-        while (i < 3) {
-            Integer randomDigit = new Random().nextInt(10);
-            boolean isDuplicated = false;
-            for (Integer testDigit : testNumber) {
-                if (testDigit.equals(randomDigit)) {
-                    isDuplicated = true;
-                    break;
-                }
-            }
-            if (!isDuplicated) {
-                testNumber.add(randomDigit);
-                i++;
-            }
-        }
-        showGuessRow(playertype, guessCount, testNumber);
-    }
-
+    /**
+     *
+     * @param playerType player or computer
+     * @param guessCount round number
+     * @param guessArray the array of digits to show
+     * @return white and red hint points
+     */
     private int[] showGuessRow(int playerType, int guessCount, List<Integer> guessArray) {
         TextView key1;
         TextView key2;
@@ -202,6 +197,10 @@ public class GameActivity extends Activity {
         return new int[]{whiteHintPoints, redHintPoints};
     }
 
+
+    /**
+     * gets the user and computer numbers from previous activity
+     */
     private void getTheNumbers() {
         userNumber = new ArrayList<>();
         computerNumber = new ArrayList<>();
@@ -232,16 +231,18 @@ public class GameActivity extends Activity {
             handleBadIntent();
     }
 
+    /**
+     * shows users numbers at the digits
+     */
     private void showTheNumbers() {
         for (Integer userDigit : userNumber)
             userNumberDigits.get(userNumber.indexOf(userDigit)).setText(String.valueOf(userDigit));
-        /*
-        for (Integer computerDigit : computerNumber)
-            computerNumberDigits.get(computerNumber.indexOf(computerDigit)).setText(String.valueOf(computerDigit));
-            */
         Log.d(TAG, "computer : " + computerNumber.toString() + " user : " + userNumber.toString());
     }
 
+    /**
+     * closes the activity if anything goes wrong with activity intent
+     */
     private void handleBadIntent() {
         Log.e(TAG, "Bad Intent Bundle at ");
         Toast.makeText(this, "An error occoured. Please restart the app.", Toast.LENGTH_SHORT).show();
@@ -249,11 +250,18 @@ public class GameActivity extends Activity {
         finish();
     }
 
+    /**
+     * back to starting activity
+     */
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
+    /**
+     * Sends submit command to Keypad instance
+     */
+    @OnClick(R.id.startKey)
     public void submit(View v) {
         userGuessNumber = keypad.submit();
         if (userGuessNumber != null) {
@@ -267,7 +275,6 @@ public class GameActivity extends Activity {
             else {
                 new Handler().postDelayed(() -> {
                     computerGuessKeyPad.setVisibility(View.VISIBLE);
-                    //List<Integer> computerGuessNumber = Keypad.createComputerNumber();
                     List<Integer> computerGuessNumber = computerGuess();
                     new Handler().postDelayed(() -> {
                         int[] computerResult = showGuessRow(PLAYER_COMPUTER, roundNumber, computerGuessNumber);
@@ -287,6 +294,10 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * shows the result on the middle of the screen at the end of the game
+     * @param whoWon player, computer or draw
+     */
     private void endGame(int whoWon) {
 
         for (Integer computerDigit : computerNumber)
@@ -294,16 +305,16 @@ public class GameActivity extends Activity {
 
         switch (whoWon) {
             case PLAYER_USER:
-                endGameText.setText("YOU WON!");
+                endGameText.setText(R.string.you_won_text);
                 break;
             case PLAYER_COMPUTER:
-                endGameText.setText("I WON!");
+                endGameText.setText(R.string.i_won_text);
                 break;
             case DRAW:
-                endGameText.setText("WE DRAW!");
+                endGameText.setText(R.string.draw_text);
                 break;
             default:
-                endGameText.setText("WE DRAW!");
+                endGameText.setText(R.string.draw_text);
                 break;
         }
         computerGuessKeyPad.setVisibility(View.INVISIBLE);
@@ -313,6 +324,13 @@ public class GameActivity extends Activity {
         endGameSubText.setVisibility(View.VISIBLE);
     }
 
+
+    /**
+     * makes a guess for a digit depending on the probabilities
+     * @param digitProbabilities digit specific probability
+     * @param computerGuess current guess to not to repeat digit values.
+     * @return an int value to use in computer guess
+     */
     private int digitGuess(List<Integer> digitProbabilities, List<Integer> computerGuess) {
         int generatedDigit = new Random().nextInt(10);
         int maximumValueOfProbability = 0;
@@ -320,15 +338,21 @@ public class GameActivity extends Activity {
             if (value > maximumValueOfProbability)
                 maximumValueOfProbability = value;
 
-        while (numberExistanceProbabilities.get(generatedDigit) <= 0 || digitProbabilities.get(generatedDigit) != maximumValueOfProbability || computerGuess.indexOf(generatedDigit) > -1)
+        while (numberExistanceProbabilities.get(generatedDigit) <= 0 ||
+                digitProbabilities.get(generatedDigit) != maximumValueOfProbability ||
+                computerGuess.indexOf(generatedDigit) > -1) {
             if (computerGuess.size() == 0)
                 generatedDigit = new Random().nextInt(9) + 1;
             else
                 generatedDigit = new Random().nextInt(10);
-
+        }
         return generatedDigit;
     }
 
+    /**
+     * computer logic to guess a good number depending on hints
+     * @return a 4-digit number to guess
+     */
     private List<Integer> computerGuess() {
 
         List<Integer> computerGuessNumber = new ArrayList<>();
@@ -375,9 +399,6 @@ public class GameActivity extends Activity {
                     numberExistanceProbabilities.set(i, 0);
             }
         }
-
-
-
 
         computerGuessHistory.add(computerGuessNumber);
         Log.d(TAG, "Computer Guess Number: " +computerGuessNumber.toString());

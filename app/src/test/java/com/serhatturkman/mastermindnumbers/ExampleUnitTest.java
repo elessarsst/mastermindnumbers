@@ -1,4 +1,4 @@
-package com.serhatturkman.mestermindnumbers;
+package com.serhatturkman.mastermindnumbers;
 
 import org.junit.Test;
 

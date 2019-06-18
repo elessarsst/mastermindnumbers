@@ -1,4 +1,4 @@
-package com.serhatturkman.mestermindnumbers;
+package com.serhatturkman.mastermindnumbers;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,19 +7,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends Activity {
     private static final String TAG = "Main Activity Log";
-    List<Integer> userNumber;
-    List<Integer> computerNumber;
 
+
+    /**
+     *  ButterKnife Assignments Start
+     *
+     */
     @BindViews({R.id.numberKey0, R.id.numberKey1, R.id.numberKey2, R.id.numberKey3, R.id.numberKey4,
             R.id.numberKey5, R.id.numberKey6, R.id.numberKey7, R.id.numberKey8, R.id.numberKey9})
     List<TextView> numberKeys;
@@ -35,6 +37,10 @@ public class MainActivity extends Activity {
 
     @BindView(R.id.startKey)
     TextView startKey;
+    /**
+     *  ButterKnife Assignments End
+     *
+     */
 
     Keypad keypad;
 
@@ -43,18 +49,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        userNumber = new ArrayList<>();
-        computerNumber = new ArrayList<>();
 
         keypad = new Keypad(userNumberIndicator, numberKeys, clearKey, backSpaceKey, startKey);
     }
 
+    /**
+     * Sends submit command to Keypad instance
+     */
+    @OnClick(R.id.startKey)
     public void submit(View view) {
-        userNumber = keypad.submit();
+        List<Integer> userNumber = keypad.submit();
         if (userNumber != null) {
             startKey.setEnabled(false);
             Log.d(TAG, "The game can be started...");
-            computerNumber = Keypad.createComputerNumber();
+            List<Integer> computerNumber = Keypad.createComputerNumber();
             int[] userDigits = {0, 0, 0, 0};
             int[] computerDigits = {0, 0, 0, 0};
             for (int number : userNumber) userDigits[userNumber.indexOf(number)] = number;
@@ -67,6 +75,4 @@ public class MainActivity extends Activity {
             finish();
         }
     }
-
-
 }
