@@ -90,7 +90,7 @@
         android:layout_weight="1"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="5sp"
-        android:autoSizeMaxTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
         android:background="#ff0000"
         android:gravity="center"
         android:textStyle="bold"

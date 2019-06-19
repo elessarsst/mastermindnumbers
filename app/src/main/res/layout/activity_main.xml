@@ -44,7 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dark Lover "
+            android:text="Dark Love by "
             android:textColor="#444750" />
 
         <TextView

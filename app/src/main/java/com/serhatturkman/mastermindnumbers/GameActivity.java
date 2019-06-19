@@ -25,14 +25,15 @@ public class GameActivity extends Activity {
     private static final int PLAYER_USER = 0;
     private static final int PLAYER_COMPUTER = 1;
     private static final int DRAW = 2;
-    List<Integer> userNumber;
-    List<Integer> computerNumber;
-    List<Integer> userGuessNumber;
-    List<Integer> numberExistanceProbabilities = new ArrayList<>();
-    List<List<Integer>> digitProbabilities = new ArrayList<>();
-    List<Integer> computersThreePoint = new ArrayList<>();
-    List<List<Integer>> computerGuessHistory = new ArrayList<>();
-    int roundNumber;
+    private List<Integer> userNumber;
+    private List<Integer> computerNumber;
+    private int[] numberExistanceProbabilities = new int[10];
+    private int[][] digitProbabilities = new int[4][10];
+    private List<Integer> computersZeroPoint = new ArrayList<>();
+    private List<Integer> computersThreePoint = new ArrayList<>();
+    private List<Integer> computersFourPoint = new ArrayList<>();
+    private List<List<Integer>> computerGuessHistory = new ArrayList<>();
+    private int roundNumber;
 
 
     /**
@@ -93,6 +94,8 @@ public class GameActivity extends Activity {
 
     Keypad keypad;
 
+
+
     /**
      * shows the keypad to make a guess
      */
@@ -118,22 +121,24 @@ public class GameActivity extends Activity {
      * Set of probabilities of digits
      */
     private void setProbabilities(){
-        List<Integer> firstDigitProbabilities = new ArrayList<>();
-        List<Integer> secondDigitProbabilities = new ArrayList<>();
-        List<Integer> thirdDigitProbabilities = new ArrayList<>();
-        List<Integer> forthDigitProbabilities = new ArrayList<>();
+        int[] firstDigitProbabilities = new int[10];
+        int[] secondDigitProbabilities = new int[10];
+        int[] thirdDigitProbabilities = new int[10];
+        int[] forthDigitProbabilities = new int[10];
+
         for (int i = 0; i < 10; i++) {
-            numberExistanceProbabilities.add(100);
-            firstDigitProbabilities.add(100);
-            secondDigitProbabilities.add(100);
-            thirdDigitProbabilities.add(100);
-            forthDigitProbabilities.add(100);
+            numberExistanceProbabilities[i] = 100;
+            firstDigitProbabilities[i] = 100;
+            secondDigitProbabilities[i] = 100;
+            thirdDigitProbabilities[i] = 100;
+            forthDigitProbabilities[i] = 100;
         }
-        digitProbabilities.add(firstDigitProbabilities);
-        digitProbabilities.add(secondDigitProbabilities);
-        digitProbabilities.add(thirdDigitProbabilities);
-        digitProbabilities.add(forthDigitProbabilities);
-        digitProbabilities.get(0).set(0, 0);
+        firstDigitProbabilities[0] = 0;
+        digitProbabilities[0] = firstDigitProbabilities;
+        digitProbabilities[1] = secondDigitProbabilities;
+        digitProbabilities[2] = thirdDigitProbabilities;
+        digitProbabilities[3] = forthDigitProbabilities;
+
     }
 
     /**
@@ -263,7 +268,7 @@ public class GameActivity extends Activity {
      */
     @OnClick(R.id.startKey)
     public void submit(View v) {
-        userGuessNumber = keypad.submit();
+        List<Integer> userGuessNumber = keypad.submit();
         if (userGuessNumber != null) {
             int[] playerResult = showGuessRow(PLAYER_USER, roundNumber, userGuessNumber);
 
@@ -331,15 +336,15 @@ public class GameActivity extends Activity {
      * @param computerGuess current guess to not to repeat digit values.
      * @return an int value to use in computer guess
      */
-    private int digitGuess(List<Integer> digitProbabilities, List<Integer> computerGuess) {
+    private int digitGuess(int[] digitProbabilities, List<Integer> computerGuess) {
         int generatedDigit = new Random().nextInt(10);
         int maximumValueOfProbability = 0;
         for (int value : digitProbabilities)
             if (value > maximumValueOfProbability)
                 maximumValueOfProbability = value;
 
-        while (numberExistanceProbabilities.get(generatedDigit) <= 0 ||
-                digitProbabilities.get(generatedDigit) != maximumValueOfProbability ||
+        while (numberExistanceProbabilities[generatedDigit] <= 0 ||
+                digitProbabilities[generatedDigit] != maximumValueOfProbability ||
                 computerGuess.indexOf(generatedDigit) > -1) {
             if (computerGuess.size() == 0)
                 generatedDigit = new Random().nextInt(9) + 1;
@@ -358,15 +363,31 @@ public class GameActivity extends Activity {
         List<Integer> computerGuessNumber = new ArrayList<>();
 
         while(computerGuessHistory.contains(computerGuessNumber) || computerGuessNumber.size() < 4) {
-            computerGuessNumber.clear();
-            if(!computersThreePoint.isEmpty()) {
-                int changeIndex = new Random().nextInt(4);
-                computerGuessNumber.addAll(computersThreePoint);
-                computerGuessNumber.set(changeIndex, digitGuess(digitProbabilities.get(changeIndex), computerGuessNumber));
-
-            } else
-                for(int i = 0; i<4; i++)
-                    computerGuessNumber.add(digitGuess(digitProbabilities.get(i), computerGuessNumber));
+            if(!computersFourPoint.isEmpty() || !computersThreePoint.isEmpty()) {
+                computerGuessNumber.clear();
+                if (!computersThreePoint.isEmpty()) {
+                    int changeIndex = new Random().nextInt(4);
+                    computerGuessNumber.addAll(computersThreePoint);
+                    computerGuessNumber.set(changeIndex, digitGuess(digitProbabilities[changeIndex], computerGuessNumber));
+                    Log.d(TAG, "Computer Guess Number : " + computerGuessNumber);
+                } else
+                    for (int i = 0; i < 4; i++)
+                        computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
+            } else {
+                computerGuessNumber.clear();
+                if(!computerGuessHistory.isEmpty())
+                    computerGuessNumber.addAll(computerGuessHistory.get(computerGuessHistory.size() - 1));
+                if(!computersZeroPoint.isEmpty()) {
+                    for (int i = 0; i < 2; i++)
+                        computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
+                    computerGuessNumber.remove(new Random().nextInt(4));
+                    computerGuessNumber.remove(new Random().nextInt(3));
+                } else
+                    for(int i = 0; i<4; i++)
+                        computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
+                while (computerGuessNumber.size() != 4)
+                    computerGuessNumber.remove(0);
+            }
             Log.d(TAG, "Generated Number :" + computerGuessNumber);
         }
 
@@ -383,20 +404,22 @@ public class GameActivity extends Activity {
 
         if(whiteHintPoints + redHintPoints == 4) {
             computersThreePoint.clear();
+            computersFourPoint.addAll(computerGuessNumber);
             for (int i = 0; i < 10; i++) {
                 if (computerGuessNumber.indexOf(i) < 0)
-                    numberExistanceProbabilities.set(i, 0);
+                    numberExistanceProbabilities[i] = 0;
             }
             if(redHintPoints == 4) {
                 for (int i = 0; i < 4; i++)
-                    digitProbabilities.get(i).set(digitProbabilities.get(i).get(computerGuessNumber.get(i)), 0);
+                    digitProbabilities[i][computerGuessNumber.get(i)] = 0;
             }
         } else if (whiteHintPoints + redHintPoints == 3 && computersThreePoint.isEmpty()) {
             computersThreePoint.addAll(computerGuessNumber);
         } else if (whiteHintPoints + redHintPoints == 0) {
+            computersZeroPoint.addAll(computerGuessNumber);
             for (int i = 0; i < 10; i++) {
                 if (computerGuessNumber.indexOf(i) >= 0)
-                    numberExistanceProbabilities.set(i, 0);
+                    numberExistanceProbabilities[i] = 0;
             }
         }
 

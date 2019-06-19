@@ -6,12 +6,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick A 4 Digit Number"
+        android:text="PICK A 4 DIGIT NUMBER"
         android:textAlignment="center"
-        android:textColor="#FF5F5F"
-        android:textSize="20sp" />
+        android:textColor="#ffaa11"
+        android:textStyle="bold"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/userNumberIndicator"
@@ -158,6 +159,7 @@
         android:paddingTop="20sp"
         android:paddingEnd="40sp"
         android:paddingBottom="20sp"
+        android:textColor="#500606"
         android:text="SUBMIT"
         android:textSize="20sp" />
 </LinearLayout>
