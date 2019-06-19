@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class GameActivity extends Activity {
-    private static final String TAG = "GameActivityError";
+    private static final String TAG = "Game Activity Log";
     private static final int PLAYER_USER = 0;
     private static final int PLAYER_COMPUTER = 1;
     private static final int DRAW = 2;
