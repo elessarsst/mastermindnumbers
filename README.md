@@ -20,6 +20,8 @@ If no one can guess in 15 rounds it's a draw.
 
 <b>The main goal is to code a computer guess logic where it's hard to beat.</b>
 
+The current computer logic is not doing well. Needs to be upgraded.
+
 The code is free to use and open to develop.
 
 
