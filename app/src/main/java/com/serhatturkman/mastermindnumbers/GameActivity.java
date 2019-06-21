@@ -34,7 +34,7 @@ public class GameActivity extends Activity {
     private List<Integer> computersFourPoint = new ArrayList<>();
     private List<List<Integer>> computerGuessHistory = new ArrayList<>();
     private int roundNumber;
-    private boolean testMode = true;
+    private boolean testMode = false;
     private Handler testHandler;
     private Runnable testRunnable;
     private Handler testHandler2;
