@@ -34,6 +34,11 @@ public class GameActivity extends Activity {
     private List<Integer> computersFourPoint = new ArrayList<>();
     private List<List<Integer>> computerGuessHistory = new ArrayList<>();
     private int roundNumber;
+    private boolean testMode = true;
+    private Handler testHandler;
+    private Runnable testRunnable;
+    private Handler testHandler2;
+    private Runnable testRunnable2;
 
 
     /**
@@ -115,6 +120,10 @@ public class GameActivity extends Activity {
         userGuessKeyPad.setVisibility(View.INVISIBLE);
         computerGuessKeyPad.setVisibility(View.INVISIBLE);
         setProbabilities();
+        if(testMode) {
+            tryKey.setEnabled(false);
+            testLoop();
+        }
     }
 
     /**
@@ -304,7 +313,12 @@ public class GameActivity extends Activity {
      * @param whoWon player, computer or draw
      */
     private void endGame(int whoWon) {
-
+        if(testMode) {
+            if (testHandler2 != null && testRunnable2 != null)
+                testHandler2.removeCallbacks(testRunnable2);
+            if (testHandler != null && testRunnable != null)
+                testHandler.removeCallbacks(testRunnable);
+        }
         for (Integer computerDigit : computerNumber)
             computerNumberDigits.get(computerNumber.indexOf(computerDigit)).setText(String.valueOf(computerDigit));
 
@@ -337,6 +351,7 @@ public class GameActivity extends Activity {
      * @return an int value to use in computer guess
      */
     private int digitGuess(int[] digitProbabilities, List<Integer> computerGuess) {
+        int generationCounter = 0;
         int generatedDigit = new Random().nextInt(10);
         int maximumValueOfProbability = 0;
         for (int value : digitProbabilities)
@@ -346,6 +361,14 @@ public class GameActivity extends Activity {
         while (numberExistanceProbabilities[generatedDigit] <= 0 ||
                 digitProbabilities[generatedDigit] != maximumValueOfProbability ||
                 computerGuess.indexOf(generatedDigit) > -1) {
+            if(generationCounter++ > 1000) {
+                Log.d(TAG, digitProbabilities.toString());
+                for(int i = 0; i<10; i++) {
+                    if(numberExistanceProbabilities[i] == 100 && computerGuess.indexOf(i) < 0)
+                        computerGuess.add(i);
+                }
+                break;
+            }
             if (computerGuess.size() == 0)
                 generatedDigit = new Random().nextInt(9) + 1;
             else
@@ -363,6 +386,7 @@ public class GameActivity extends Activity {
         List<Integer> computerGuessNumber = new ArrayList<>();
 
         while(computerGuessHistory.contains(computerGuessNumber) || computerGuessNumber.size() < 4) {
+
             if(!computersFourPoint.isEmpty() || !computersThreePoint.isEmpty()) {
                 computerGuessNumber.clear();
                 if (!computersThreePoint.isEmpty()) {
@@ -382,9 +406,17 @@ public class GameActivity extends Activity {
                         computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
                     computerGuessNumber.remove(new Random().nextInt(4));
                     computerGuessNumber.remove(new Random().nextInt(3));
-                } else
-                    for(int i = 0; i<4; i++)
-                        computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
+                } else {
+                    if (roundNumber == 0 && testMode) {
+                        computerGuessNumber = new ArrayList<>();
+                        computerGuessNumber.add(1);
+                        computerGuessNumber.add(2);
+                        computerGuessNumber.add(3);
+                        computerGuessNumber.add(4);
+                    } else
+                        for (int i = 0; i < 4; i++)
+                            computerGuessNumber.add(digitGuess(digitProbabilities[i], computerGuessNumber));
+                }
                 while (computerGuessNumber.size() != 4)
                     computerGuessNumber.remove(0);
             }
@@ -426,5 +458,33 @@ public class GameActivity extends Activity {
         computerGuessHistory.add(computerGuessNumber);
         Log.d(TAG, "Computer Guess Number: " +computerGuessNumber.toString());
         return computerGuessNumber;
+
+    }
+
+
+    private void testLoop(){
+        testHandler = new Handler();
+        testHandler2 = new Handler();
+        testRunnable = () -> {
+            computerGuessKeyPad.setVisibility(View.VISIBLE);
+            testHandler2 = new Handler();
+            testHandler2.postDelayed(testRunnable2, 100);
+            testHandler.postDelayed(testRunnable, 500);
+        };
+        testRunnable2 = () -> {
+            List<Integer> computerGuessNumber = computerGuess();
+            int[] computerResult = showGuessRow(PLAYER_COMPUTER, roundNumber, computerGuessNumber);
+            if (computerResult[0] == 4)
+                endGame(PLAYER_COMPUTER);
+            else {
+                if (roundNumber < 14) {
+                    roundNumber++;
+                    computerGuessKeyPad.setVisibility(View.INVISIBLE);
+                    tryKey.setEnabled(true);
+                } else
+                    endGame(DRAW);
+            }
+        };
+        testHandler.post(testRunnable);
     }
 }
